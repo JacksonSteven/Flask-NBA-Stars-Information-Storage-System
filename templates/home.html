@@ -1,0 +1,125 @@
+{# extends用于HTML的继承，避免重复造轮子 #}
+{% extends 'base.html' %}
+{% block title %}
+Home
+{% endblock %}
+
+{% block body %}
+    <div class="hero-image">
+            <div class="hero-text">
+                <h1 style="font-size: 90px">NBA50大巨星！</h1>
+            </div>
+    </div>
+
+    <!--table-->
+    <div class="card">
+        <h2 class="card-header">当前在役的巨星</h2>
+        <div class="card-body">
+            <table class="table table-hover table-bordered table-striped">
+                <thead class="thead-light">
+                    <tr>
+                        <th scope="col">#</th>
+                        <th scope="col">名字</th>
+                        <th scope="col">身高</th>
+                        <th scope="col">年龄</th>
+                        <th scope="col">当前级别</th>
+                        <th scope="col"></th>
+                    </tr>
+                </thead>
+                <tbody>
+                {% for row in stars %}
+                    <tr>
+                        <td>{{ row.id }}</td>
+                        <td>{{ row.name }}</td>
+                        <td>{{ row.height }}</td>
+                        <td>{{ row.age }}</td>
+                        <td>{{ row.level }}</td>
+                        <td>
+                            <button type="button" class="btn btn-warning" data-toggle="modal" data-target="#editModal{{ row.id }}">编辑</button>
+                            <a href="/delete/{{ row.id }}" class="btn btn-danger">删除</a>
+                        </td>
+                    </tr>
+                    <!--Modal:编辑哥哥内容-->
+        <div class="modal fade" id="editModal{{ row.id }}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+          <div class="modal-dialog" role="document">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">更新</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                  <span aria-hidden="true">&times;</span>
+                </button>
+              </div>
+              <div class="modal-body">
+                <form action="{{ url_for('update')}}" method="POST">
+                    <input type="hidden" name="id" value="{{ row.id }}">
+                  <div class="form-group">
+                    <label>名字:</label>
+                    <input type="text" class="from-control" name="name" value="{{ row.name }}">
+                  </div>
+                  <div class="form-group">
+                    <label>身高:</label>
+                    <input type="text" class="from-control" name="height" value="{{ row.height }}">
+                  </div>
+                  <div class="form-group">
+                    <label>年龄:</label>
+                    <input type="text" class="from-control" name="age" value="{{ row.age }}">
+                  </div>
+                  <div class="form-group">
+                    <label>当前级别:</label>
+                    <input type="text" class="from-control" name="level" value="{{ row.level }}">
+                  </div>
+                  <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">关闭</button>
+                    <button type="submit" class="btn btn-primary">更新</button>
+                  </div>
+                </form>
+              </div>
+            </div>
+          </div>
+        </div>
+                {% endfor %}
+                </tbody>
+            </table>
+            <button type="button" class="btn btn-outline-info" data-toggle="modal" data-target="#addNew">添加一位球星</button>
+        </div>
+    </div>
+
+
+    <!--madal:添加一位球星-->
+<div class="modal fade" id="addNew" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">添加一位球星</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <form action="{{ url_for('insert')}}" method="POST">
+          <div class="form-group">
+            <label>名字:</label>
+            <input type="text" class="from-control" name="name">
+          </div>
+          <div class="form-group">
+            <label>身高:</label>
+            <input type="text" class="from-control" name="height">
+          </div>
+          <div class="form-group">
+            <label>年龄:</label>
+            <input type="text" class="from-control" name="age">
+          </div>
+          <div class="form-group">
+            <label>当前级别:</label>
+            <input type="text" class="from-control" name="level">
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">关闭</button>
+            <button type="submit" class="btn btn-primary">添加</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}
